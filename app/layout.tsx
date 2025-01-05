@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { Nav } from "./ui/components/ nav";
+import { Footer } from "./ui/components/footer";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -14,15 +16,15 @@ const geistMono = localFont({
 });
 
 export const viewport: Viewport = {
-  themeColor: 'black',
+  themeColor: "black",
   initialScale: 1,
-  width: 'device-width'
-}
+  width: "device-width",
+};
 
 export const metadata: Metadata = {
   title: "memuseum",
   description: "meme museum - the cultural space for our shared history",
-  applicationName: 'memuseum',
+  applicationName: "memuseum",
 };
 
 export default function RootLayout({
@@ -35,7 +37,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="flex flex-col min-h-screen container mx-auto">
+          <div className="py-4">
+            <Nav />
+          </div>
+
+          {children}
+
+          <div className="mt-auto py-4">
+            <Footer />
+          </div>
+        </div>
       </body>
     </html>
   );
