@@ -1,10 +1,15 @@
-import { Like } from "./ui/components/like/like";
+import { AddVideo } from "./ui/containers/video-add";
+import { VideoList } from "./ui/containers/video-list";
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="flex gap-4">
       <div>
-        <Like />
+        <AddVideo />
+
+        <div className="mt-2 w-full">
+          <VideoList />
+        </div>
       </div>
     </main>
   );
