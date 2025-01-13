@@ -1,16 +1,22 @@
 "use client";
-import { Analytics, getAnalytics } from "firebase/analytics";
+import { Analytics, getAnalytics, isSupported } from "firebase/analytics";
 import { firebaseApp } from "../services/firestore-app";
-import { createContext } from "react";
 
 export let analytics: Analytics | null;
 
-export const initAnalytics = () => {
+const analyticsSupported = await isSupported();
+
+export const initAnalytics = async () => {
   if (analytics == null) {
-    analytics = getAnalytics(firebaseApp);
-    console.log("INIT analytics:", analytics);
+    if (analyticsSupported) {
+      analytics = getAnalytics(firebaseApp);
+      console.log("INIT analytics:", analytics);
+    } else {
+      console.error("Analytics are not supported");
+    }
   }
 
   return analytics;
 };
-export const AnalyticsContext = createContext<Analytics>(initAnalytics());
+
+// export const AnalyticsContext = createContext<Analytics>(initAnalytics());

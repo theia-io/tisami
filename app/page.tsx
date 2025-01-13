@@ -1,14 +1,11 @@
-import { AddVideo } from "./ui/containers/video-add";
-import { VideoList } from "./ui/containers/video-list";
+import { List } from "./ui/containers/list";
 
 export default async function Home() {
   return (
     <main className="flex gap-4">
       <div>
-        <AddVideo />
-
         <div className="mt-2 w-full">
-          <VideoList />
+          <List id="hyjl5YuftuVkz5oGyvgM"></List>
         </div>
       </div>
     </main>
