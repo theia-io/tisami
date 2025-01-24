@@ -1,18 +1,19 @@
 "use client";
 import {
   fetchChildrenListsById,
+  fetchListBulkVideo,
   fetchListById,
-  fetchVideoBulk,
 } from "@/app/lib/api";
 import { DBContext } from "@/app/lib/context";
 import { IList, IVideo } from "@/app/lib/models/video";
+import { Card } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import { Youtube } from "../components/youtube/youtube";
+import { FaHammer } from "react-icons/fa";
+import { ListComponent } from "../components/list/list";
+import { ListPreviewComponent } from "../components/list/list-preview";
 import { ListAdd } from "./list-add";
 import { VideoAdd } from "./video-add";
-import { ListComponent } from "../components/list/list";
-import { FaHammer } from "react-icons/fa";
-import { Card } from "@mui/material";
+import { Youtube } from "../components/youtube/youtube";
 
 type Props = { id: string };
 
@@ -28,7 +29,6 @@ export function List({ id }: Props) {
   useEffect(() => {
     (async () => {
       const list = await fetchListById(db)(id);
-      console.log("RECEIVED list", list);
       setList(list);
     })();
   }, [id]);
@@ -36,7 +36,6 @@ export function List({ id }: Props) {
   useEffect(() => {
     (async () => {
       const children = await fetchChildrenListsById(db)(id);
-      console.log("RECEIVED children", children);
       setListChildren(children);
     })();
   }, [id]);
@@ -52,7 +51,8 @@ export function List({ id }: Props) {
 
     if (listIds) {
       (async () => {
-        const videoList = await fetchVideoBulk(db)(listIds);
+        console.log("listIds", listIds);
+        const videoList = await fetchListBulkVideo(db)(listIds);
         console.log("RECEIVED videoList", videoList);
 
         if (!videoList) {
@@ -63,7 +63,7 @@ export function List({ id }: Props) {
         setVideos(
           videoList.reduce((acc, video) => {
             const idx = video.listId ?? "no_list";
-            const videosInList = acc[idx];
+            const videosInList = acc[idx] ?? [];
             return { ...acc, [idx]: [...videosInList, video] };
           }, {} as { [index: string]: Array<IVideo> })
         );
@@ -72,50 +72,64 @@ export function List({ id }: Props) {
   }, [list?.id, listChildren]);
 
   if (!list) {
-    return (
-      <div className="container mx-auto flex flex-wrap gap-2">
-        There is no such list.
-      </div>
-    );
+    return <div>There is no such list.</div>;
   }
 
   return (
-    <div className="container mx-auto flex flex-col gap-2">
-      <ListComponent list={list} videos={videos?.[list.id]} />
+    <div className="flex flex-col gap-2">
+      <ListComponent list={list} videos={videos?.[list.id]}>
+        <Card variant="outlined" className="p-4">
+          <VideoAdd
+            listId={list.id}
+            addedVideoHandler={(video: IVideo) =>
+              setVideos((currentVideos) => ({
+                ...currentVideos,
+                [list.id]: [video, ...(currentVideos?.[list.id] ?? [])],
+              }))
+            }
+          />
+        </Card>
+      </ListComponent>
+
+      {Object.entries(videos ?? {})
+        .map(([listId, videos]) =>
+          videos.map((video) => <Youtube key={video.id} videoId={video.url} />)
+        )
+        .flat()}
 
       <Card variant="outlined" className="p-4">
         <div className="flex items-center gap-4">
           <FaHammer className="text-4xl" />{" "}
-          <span className="font-semibold text-2xl">List info:</span>
+          <span className="font-semibold text-2xl">Новий вкладений список</span>
         </div>
+
         <ListAdd listId={list.id} />
       </Card>
 
       {listChildren && listChildren.length > 0 && (
         <>
-          <p className="text-2xl mb-0">Списки:</p>
+          <hr className="my-2" />
+
           {listChildren?.map((subList) => (
-            <div className="flex" key={subList.id}>
-              <div className="flex gap-2">
-                <div>
-                  {subList.pinnedVideoUrl ? (
-                    <Youtube videoId={subList.pinnedVideoUrl} />
-                  ) : (
-                    <p>List does not have pinned video</p>
-                  )}
-                </div>
-
-                <div className="flex gap-2">
-                  <div className="flex flex-col">
-                    <VideoAdd listId={subList.id} />
-                  </div>
-
-                  {videos?.[subList.id]?.map((listVideo) => (
-                    <Youtube key={listVideo.id} videoId={listVideo.url} />
-                  ))}
-                </div>
-              </div>
-            </div>
+            <Card key={subList.id} className="p-2 md:p-4">
+              <ListPreviewComponent
+                list={subList}
+                videos={videos?.[subList.id]}
+              >
+                <VideoAdd
+                  listId={subList.id}
+                  addedVideoHandler={(video: IVideo) =>
+                    setVideos((currentVideos) => ({
+                      ...currentVideos,
+                      [subList.id]: [
+                        video,
+                        ...(currentVideos?.[subList.id] ?? []),
+                      ],
+                    }))
+                  }
+                />
+              </ListPreviewComponent>
+            </Card>
           ))}
         </>
       )}

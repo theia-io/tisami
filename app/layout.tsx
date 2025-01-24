@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.scss";
 import { Providers } from "./lib/context/providers";
-import { Nav } from "./ui/components/ nav";
+import { Nav } from "./ui/components/nav";
 import { Footer } from "./ui/components/footer";
 import { StyledEngineProvider } from "@mui/material/styles";
 
@@ -40,19 +40,19 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <StyledEngineProvider injectFirst>
-        <Providers>
-          <div className="flex flex-col min-h-screen container mx-auto">
-            <div className="py-4">
-              <Nav />
-            </div>
+          <Providers>
+            <div className="flex flex-col min-h-screen container mx-auto p-2 md:p-0">
+              <div className="py-2">
+                <Nav />
+              </div>
 
-            {children}
+              {children}
 
-            <div className="mt-auto py-4">
-              <Footer />
+              <div className="container mx-auto mt-auto py-2">
+                <Footer />
+              </div>
             </div>
-          </div>
-        </Providers>
+          </Providers>
         </StyledEngineProvider>
       </body>
     </html>

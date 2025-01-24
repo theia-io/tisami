@@ -1,5 +1,5 @@
 "use client";
-import { addList, addVideo } from "@/app/lib/api";
+import { addList } from "@/app/lib/api";
 import { DBContext } from "@/app/lib/context";
 import { Button, TextField } from "@mui/material";
 import { useContext, useState } from "react";
@@ -30,19 +30,19 @@ export function ListAdd({ listId }: Props) {
     <div className="flex flex-col gap-2">
       <TextField
         onChange={(event) => setPinnedVideoUrl(event.target.value)}
-        label="Pinned video URL"
+        label="Закріплене відео URL"
         variant="standard"
       />
 
       <TextField
         onChange={(event) => setName(event.target.value)}
-        label="Name"
+        label="Ім'я"
         variant="standard"
       />
 
       <TextField
         onChange={(event) => setDescription(event.target.value)}
-        label="Description"
+        label="Опис"
         minRows={3}
         multiline={true}
         variant="standard"
@@ -54,7 +54,7 @@ export function ListAdd({ listId }: Props) {
           onClick={addListHandler}
           variant="contained"
         >
-          <FaPlusSquare className="mr-2" /> Add sub-list
+          <FaPlusSquare className="mr-2" /> Створити
         </Button>
       </div>
     </div>

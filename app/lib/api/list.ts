@@ -63,7 +63,10 @@ export const addList = async (
       timestamp: serverTimestamp(),
     });
     console.log("Document written with ID: ", docRef.id);
-    return docRef;
+    return {
+      ...list,
+      id: docRef.id,
+    };
   } catch (e) {
     console.error("Error adding document: ", e);
     return null;
