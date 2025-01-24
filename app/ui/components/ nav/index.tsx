@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export function Nav() {
   return (
-    <nav className="flex gap-6 flex-wrap items-center">
+    <nav className="flex gap-2 flex-wrap items-center">
       <Link
         className="flex items-center gap-2 hover:underline hover:underline-offset-4"
         href="/"
@@ -16,8 +16,8 @@ export function Nav() {
           height={16}
         />
 
-        Meme Museum
-      </Link>
+        MemeMuseum 
+      </Link> - Меми твого дитинства
     </nav>
   );
 }

@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
+import "./globals.scss";
 import { Providers } from "./lib/context/providers";
 import { Nav } from "./ui/components/ nav";
 import { Footer } from "./ui/components/footer";
+import { StyledEngineProvider } from "@mui/material/styles";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -38,6 +39,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <StyledEngineProvider injectFirst>
         <Providers>
           <div className="flex flex-col min-h-screen container mx-auto">
             <div className="py-4">
@@ -51,6 +53,7 @@ export default function RootLayout({
             </div>
           </div>
         </Providers>
+        </StyledEngineProvider>
       </body>
     </html>
   );

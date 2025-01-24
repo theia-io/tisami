@@ -12,11 +12,5 @@ export function Youtube({ videoId }: { videoId: string }) {
     },
   };
 
-  const _onReady = (event: any) => {
-    // access to player in all event handlers via event.target
-    console.log("READY", event);
-    // event.target.pauseVideo();
-  };
-
-  return <YouTube videoId={videoId} opts={opts} onReady={_onReady} />;
+  return <YouTube videoId={videoId} opts={opts} />;
 }

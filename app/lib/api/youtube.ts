@@ -1,6 +1,6 @@
 import { IVideo } from "../models/video";
 
-const MOCK: Array<IVideo> = [
+const MOCK: Array<Partial<IVideo>> = [
   {
     id: "-vq6b3B6VwQ",
     url: "-vq6b3B6VwQ",
