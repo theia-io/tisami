@@ -20,6 +20,8 @@ type Props = { id: string };
 export function List({ id }: Props) {
   const db = useContext(DBContext);
 
+  const [editList, setEditList] = useState(false);
+
   const [list, setList] = useState<IList | null>(null);
   const [listChildren, setListChildren] = useState<Array<IList> | null>(null);
   const [videos, setVideos] = useState<{
@@ -82,65 +84,73 @@ export function List({ id }: Props) {
 
   return (
     <div className="flex flex-col gap-2">
-      <ListComponent list={list} videos={videos?.[list.id]}>
-        <Card variant="outlined" className="p-4">
-          <VideoAdd
-            listId={list.id}
-            addedVideoHandler={(video: IVideo) =>
-              setVideos((currentVideos) => ({
-                ...currentVideos,
-                [list.id]: [video, ...(currentVideos?.[list.id] ?? [])],
-              }))
-            }
-          />
-        </Card>
+      <ListComponent
+        list={list}
+        videos={videos?.[list.id]}
+        editHandler={() => setEditList((editList) => !editList)}
+      >
+        {editList && (
+          <Card variant="outlined" className="p-4">
+            <VideoAdd
+              listId={list.id}
+              addedVideoHandler={(video: IVideo) =>
+                setVideos((currentVideos) => ({
+                  ...currentVideos,
+                  [list.id]: [video, ...(currentVideos?.[list.id] ?? [])],
+                }))
+              }
+            />
+          </Card>
+        )}
       </ListComponent>
 
       <div className="flex flex-wrap justify-center gap-2">
-        {Object.entries(videos ?? {})
-          .map(([_, videos]) =>
-            videos.map((video) => (
-              <Youtube key={video.id} videoId={video.url} />
-            ))
-          )
-          .flat()}
+        {videos?.[list.id]?.map((video) => (
+          <Youtube key={video.id} videoId={video.url} />
+        ))}
       </div>
-
-      <Card variant="outlined" className="p-4">
-        <div className="flex items-center gap-4">
-          <FaHammer className="text-4xl" />{" "}
-          <span className="font-semibold text-2xl">Новий вкладений список</span>
-        </div>
-
-        <ListAdd listId={list.id} />
-      </Card>
 
       {listChildren && listChildren.length > 0 && (
         <>
           <hr className="my-2" />
 
           {listChildren?.map((subList) => (
-            <Card key={subList.id} className="p-2 md:p-4">
+            <div key={subList.id} className="mt-8">
               <ListPreviewComponent
                 list={subList}
                 videos={videos?.[subList.id]}
               >
-                <VideoAdd
-                  listId={subList.id}
-                  addedVideoHandler={(video: IVideo) =>
-                    setVideos((currentVideos) => ({
-                      ...currentVideos,
-                      [subList.id]: [
-                        video,
-                        ...(currentVideos?.[subList.id] ?? []),
-                      ],
-                    }))
-                  }
-                />
+                {editList && (
+                  <Card variant="outlined" className="p-4 min-w-[215px]">
+                    <VideoAdd
+                      listId={subList.id}
+                      addedVideoHandler={(video: IVideo) =>
+                        setVideos((currentVideos) => ({
+                          ...currentVideos,
+                          [subList.id]: [
+                            video,
+                            ...(currentVideos?.[subList.id] ?? []),
+                          ],
+                        }))
+                      }
+                    />
+                  </Card>
+                )}
               </ListPreviewComponent>
-            </Card>
+            </div>
           ))}
         </>
+      )}
+
+      {editList && (
+        <Card variant="outlined" className="p-4">
+          <div className="flex items-center gap-4">
+            <FaHammer className="text-4xl" />{" "}
+            <span className="font-semibold text-2xl">Нова секція</span>
+          </div>
+
+          <ListAdd listId={list.id} />
+        </Card>
       )}
     </div>
   );

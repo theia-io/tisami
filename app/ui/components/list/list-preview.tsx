@@ -1,12 +1,17 @@
 import { IList, IVideo } from "@/app/lib/models/video";
 import { Fab } from "@mui/material";
 import Link from "next/link";
-import { FaAngleDoubleRight } from "react-icons/fa";
-import { Tag } from "../tag/tag";
+import { FaAngleDoubleRight, FaLink } from "react-icons/fa";
+import { getRandomCallsign } from "../../models/callsigns";
+import { Tag, Tags } from "../tag/tag";
 import { Youtube } from "../youtube/youtube";
+import { useRef } from "react";
+import { useWindowDimensions } from "../../shared/viewport";
 
 type Props = {
   withLink?: boolean;
+  hiddenPinnedVideo?: boolean;
+
   list: IList;
   videos?: Array<IVideo>;
   children?: React.ReactNode;
@@ -14,20 +19,53 @@ type Props = {
 
 export function ListPreviewComponent({
   videos,
-  list,
+  list: { id, pinnedVideoUrl, tags, name, description, timestamp },
   children,
   withLink = false,
+  hiddenPinnedVideo = true,
 }: Props) {
+    const { width } = useWindowDimensions();
+  const scrollableRef = useRef(null);
+
+  const pinnedVideoBody = pinnedVideoUrl ? (
+    hiddenPinnedVideo ? (
+      <a
+        className="text-xl md:text-2xl underline"
+        target="_blank"
+        href={`https://www.youtube.com/watch?v=${pinnedVideoUrl}`}
+      >
+        {" "}
+        <FaLink className="inline" /> Випуск на YouTube
+      </a>
+    ) : (
+      <Youtube videoId={pinnedVideoUrl} />
+    )
+  ) : null;
+
   const listPreviewBody = (
-    <div className="flex flex-col md:flex-row gap-4">
-      <div className="max-w-[350px]">
-        <h2 className="text-2xl">{list.name}</h2>
-        <h3 className="mt-2 text-xl">{list.description}</h3>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-nowrap overflow-auto items-center gap-4">
+        {pinnedVideoBody}
+
+        <div>|</div>
+
+            <h2 className="text-xl md:text-2xl inline-block">
+              {name ?? getRandomCallsign()}
+            </h2>
+
+            <div>|</div>
+
+            <h2 className="text-xl md:text-2xl inline-block">
+              {description}
+            </h2>
       </div>
 
-      {list.pinnedVideoUrl && <Youtube videoId={list.pinnedVideoUrl} />}
+      <Tags tags={tags} />
 
-      <div className="relative flex flex-nowrap gap-2 overflow-auto">
+      <div
+        ref={scrollableRef}
+        className="relative flex flex-nowrap items-center gap-2 overflow-auto"
+      >
         {children}
 
         {videos?.map((listVideo) => (
@@ -35,13 +73,17 @@ export function ListPreviewComponent({
         ))}
 
         {videos && videos.length > 3 && (
-          <Fab
-            className="absolute right-2 top-1/2 translate-y-[-50%]"
-            color="primary"
-            aria-label="add"
+          <div
+            onClick={() => {
+              console.log("scrollableRef", scrollableRef, width);
+              (scrollableRef?.current as any).scrollLeft += (width / 2);
+            }}
+            className="sticky right-2 top-1/2 translate-y-[-50%]"
           >
-            <FaAngleDoubleRight />
-          </Fab>
+            <Fab color="primary" aria-label="scroll">
+              <FaAngleDoubleRight />
+            </Fab>
+          </div>
         )}
       </div>
     </div>
@@ -50,17 +92,9 @@ export function ListPreviewComponent({
   return (
     <>
       {withLink ? (
-        <Link href={`/list/${list.id}`}>{listPreviewBody}</Link>
+        <Link href={`/list/${id}`}>{listPreviewBody}</Link>
       ) : (
         listPreviewBody
-      )}
-
-      {list.tags && list.tags.length > 0 && (
-        <div className="mt-2 md:mt-4 flex flex-wrap gap-2">
-          {list.tags.map((tag) => (
-            <Tag text={tag} key={tag}></Tag>
-          ))}
-        </div>
       )}
     </>
   );

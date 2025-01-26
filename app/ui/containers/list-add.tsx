@@ -15,13 +15,17 @@ export function ListAdd({ listId }: Props) {
   const [pinnedVideoUrl, setPinnedVideoUrl] = useState<string | undefined>(
     undefined
   );
-  const [name, setName] = useState<string | null>(null);
-  const [description, setDescription] = useState<string | null>(null);
+  const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [currentTag, setCurrentTag] = useState<string>("");
+  const [tags, setTags] = useState<Array<string>>([]);
 
   const addListHandler = async () => {
     const createdList = await addList(db, {
       name,
       pinnedVideoUrl,
+      description,
+      tags,
       parentId: listId,
     });
   };
@@ -45,6 +49,19 @@ export function ListAdd({ listId }: Props) {
         label="Опис"
         minRows={3}
         multiline={true}
+        variant="standard"
+      />
+
+      <TextField
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && currentTag) {
+            setTags((currTags) => [...currTags, currentTag]);
+            setCurrentTag("");
+          }
+        }}
+        value={currentTag}
+        onChange={(event) => setCurrentTag(event.target.value)}
+        label="Хештеги"
         variant="standard"
       />
 

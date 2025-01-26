@@ -16,7 +16,7 @@ export function VideoAdd({ listId, addedVideoHandler }: Props) {
 
   const [url, setUrl] = useState("");
   const [description, setDescription] = useState("");
-  const [currentTag, setCurrentTag] = useState<string | null>(null);
+  const [currentTag, setCurrentTag] = useState<string | null>("");
   const [tags, setTags] = useState<Array<string>>([]);
 
   const addVideoHandler = async () => {

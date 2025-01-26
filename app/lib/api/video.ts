@@ -3,7 +3,6 @@ import {
   collection,
   Firestore,
   getDocs,
-  limit,
   query,
   serverTimestamp,
   where
@@ -17,8 +16,7 @@ export const fetchListVideo =
   async (listId: IList["id"]): Promise<Array<IVideo> | null> => {
     const videoQueries = query(
       collection(db, VIDEO_COLLECTION),
-      where("listId", "==", listId),
-      limit(2)
+      where("listId", "==", listId)
     );
 
     try {
@@ -44,8 +42,7 @@ export const fetchListBulkVideo =
   async (listIds: Array<IList["id"]>): Promise<Array<IVideo> | null> => {
     const videoQueries = query(
       collection(db, VIDEO_COLLECTION),
-      where("listId", "in", listIds),
-      limit(2)
+      where("listId", "in", listIds)
     );
 
     try {
