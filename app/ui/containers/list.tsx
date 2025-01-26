@@ -11,9 +11,9 @@ import { useContext, useEffect, useState } from "react";
 import { FaHammer } from "react-icons/fa";
 import { ListComponent } from "../components/list/list";
 import { ListPreviewComponent } from "../components/list/list-preview";
+import { Youtube } from "../components/youtube/youtube";
 import { ListAdd } from "./list-add";
 import { VideoAdd } from "./video-add";
-import { Youtube } from "../components/youtube/youtube";
 
 type Props = { id: string };
 
@@ -72,7 +72,12 @@ export function List({ id }: Props) {
   }, [list?.id, listChildren]);
 
   if (!list) {
-    return <div>There is no such list.</div>;
+    return (
+      <div>
+        Ми не змогли знайти такий список, перевірьте посилання та спробуйте ще
+        раз.
+      </div>
+    );
   }
 
   return (
@@ -91,11 +96,15 @@ export function List({ id }: Props) {
         </Card>
       </ListComponent>
 
-      {Object.entries(videos ?? {})
-        .map(([listId, videos]) =>
-          videos.map((video) => <Youtube key={video.id} videoId={video.url} />)
-        )
-        .flat()}
+      <div className="flex flex-wrap justify-center gap-2">
+        {Object.entries(videos ?? {})
+          .map(([_, videos]) =>
+            videos.map((video) => (
+              <Youtube key={video.id} videoId={video.url} />
+            ))
+          )
+          .flat()}
+      </div>
 
       <Card variant="outlined" className="p-4">
         <div className="flex items-center gap-4">

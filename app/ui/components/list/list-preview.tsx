@@ -1,10 +1,16 @@
 import { IList, IVideo } from "@/app/lib/models/video";
-import { Card } from "@mui/material";
+import { Fab } from "@mui/material";
 import Link from "next/link";
+import { FaAngleDoubleRight } from "react-icons/fa";
 import { Tag } from "../tag/tag";
 import { Youtube } from "../youtube/youtube";
 
-type Props = { withLink?: boolean; list: IList; videos?: Array<IVideo>;children?: React.ReactNode };
+type Props = {
+  withLink?: boolean;
+  list: IList;
+  videos?: Array<IVideo>;
+  children?: React.ReactNode;
+};
 
 export function ListPreviewComponent({
   videos,
@@ -19,16 +25,24 @@ export function ListPreviewComponent({
         <h3 className="mt-2 text-xl">{list.description}</h3>
       </div>
 
-      {list.pinnedVideoUrl && (
-          <Youtube videoId={list.pinnedVideoUrl} />
-      )}
+      {list.pinnedVideoUrl && <Youtube videoId={list.pinnedVideoUrl} />}
 
-      <div className="flex flex-nowrap gap-2">
+      <div className="relative flex flex-nowrap gap-2 overflow-auto">
         {children}
-         
+
         {videos?.map((listVideo) => (
           <Youtube key={listVideo.id} videoId={listVideo.url} />
         ))}
+
+        {videos && videos.length > 3 && (
+          <Fab
+            className="absolute right-2 top-1/2 translate-y-[-50%]"
+            color="primary"
+            aria-label="add"
+          >
+            <FaAngleDoubleRight />
+          </Fab>
+        )}
       </div>
     </div>
   );

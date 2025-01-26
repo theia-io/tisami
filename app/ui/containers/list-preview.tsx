@@ -3,15 +3,11 @@ import { fetchListById, fetchListVideo } from "@/app/lib/api";
 import { DBContext } from "@/app/lib/context";
 import { IList, IVideo } from "@/app/lib/models/video";
 import { useContext, useEffect, useState } from "react";
-import { Youtube } from "../components/youtube/youtube";
-import { Tag } from "../components/tag/tag";
-import { Card } from "@mui/material";
-import Link from "next/link";
 import { ListPreviewComponent } from "../components/list/list-preview";
 
 type Props = { id: string };
 
-export function ListPreview({ id }: Props) {
+export function ListPreviewContainer({ id }: Props) {
   const db = useContext(DBContext);
 
   const [list, setList] = useState<IList | null>(null);
