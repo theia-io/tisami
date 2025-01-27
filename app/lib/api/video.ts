@@ -5,7 +5,7 @@ import {
   getDocs,
   query,
   serverTimestamp,
-  where
+  where,
 } from "firebase/firestore";
 import { IList, IVideo } from "../models/video";
 
@@ -71,7 +71,9 @@ export const addVideo = async (
     const videosCollection = collection(db, VIDEO_COLLECTION);
     const docRef = await addDoc(videosCollection, {
       ...video,
-      timestamp: serverTimestamp(),
+      timestamp: {
+        createdAt: new Date().toUTCString(),
+      },
     });
     console.log("Document written with ID: ", docRef.id, docRef);
     return {

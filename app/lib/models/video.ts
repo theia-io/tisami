@@ -1,8 +1,12 @@
+
 export interface Meta {
   name?: string | null;
   description?: string | null;
   tags?: Array<string>;
-  timestamp: Date; 
+  timestamp: {
+    createdAt: Date;
+    updatedAt?: Date;
+  }; 
 }
 
 export interface IVideo extends Meta {
@@ -11,7 +15,11 @@ export interface IVideo extends Meta {
   listId?: IList["id"];
 }
 
-export interface IList extends Meta {
+export interface AssetMeta extends Meta {
+  viewed?: number;
+}
+
+export interface IList extends AssetMeta {
   id: string;
   parentId?: IList["id"];
   // think about this

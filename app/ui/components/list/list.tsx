@@ -1,8 +1,10 @@
-import { IList, IVideo, Meta } from "@/app/lib/models/video";
-import { Youtube } from "../youtube/youtube";
-import { Tag, Tags } from "../tag/tag";
+import { IList, IVideo } from "@/app/lib/models/video";
 import { Fab } from "@mui/material";
-import { FaAngleDoubleRight, FaEdit } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
+import { Tags } from "../tag/tag";
+import { TimestampComponent } from "../timestamp/timestamp";
+import { Youtube } from "../youtube/youtube";
+import { ViewedComponent } from "../viewed/viewed";
 
 type Props = {
   list: IList;
@@ -13,7 +15,7 @@ type Props = {
 
 export function ListComponent({
   videos,
-  list: { pinnedVideoUrl, tags, name, description },
+  list: { pinnedVideoUrl, tags, name, description, timestamp, viewed },
   children,
   editHandler,
 }: Props) {
@@ -37,6 +39,11 @@ export function ListComponent({
             <FaEdit />
           </Fab>
         </div>
+      </div>
+
+      <div className="flex flex-nowrap gap-4">
+        {timestamp && <TimestampComponent timestamp={timestamp} />}
+        {viewed && <ViewedComponent viewed={viewed} />}
       </div>
 
       <Tags tags={tags} />

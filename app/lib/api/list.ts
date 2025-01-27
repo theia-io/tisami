@@ -7,9 +7,10 @@ import {
   getDocs,
   query,
   serverTimestamp,
+  updateDoc,
   where,
 } from "firebase/firestore";
-import { IList } from "../models/video";
+import { AssetMeta, IList } from "../models/video";
 
 export const fetchListById =
   (db: Firestore) =>
@@ -60,7 +61,9 @@ export const addList = async (
     const listCollection = collection(db, "list");
     const docRef = await addDoc(listCollection, {
       ...list,
-      timestamp: serverTimestamp(),
+      timestamp: {
+        createdAt: (new Date()).toUTCString(),
+      },
     });
     console.log("Document written with ID: ", docRef.id);
     return {
@@ -69,6 +72,27 @@ export const addList = async (
     };
   } catch (e) {
     console.error("Error adding document: ", e);
+    return null;
+  }
+};
+
+export const updateListMeta = async (
+  db: Firestore,
+  listId: IList["id"],
+  meta: Partial<AssetMeta>
+) => {
+  try {
+    const docRef = doc(db, "list", listId);
+    await updateDoc(
+      docRef,
+      {
+        ...meta
+      }
+    );
+
+    return meta;
+  } catch (e) {
+    console.error("Error updating list meta: ", e);
     return null;
   }
 };

@@ -3,6 +3,7 @@ import {
   fetchChildrenListsById,
   fetchListBulkVideo,
   fetchListById,
+  updateListMeta,
 } from "@/app/lib/api";
 import { DBContext } from "@/app/lib/context";
 import { IList, IVideo } from "@/app/lib/models/video";
@@ -27,6 +28,22 @@ export function List({ id }: Props) {
   const [videos, setVideos] = useState<{
     [index: string]: Array<IVideo>;
   } | null>(null);
+
+  useEffect(() => {
+    if (!list) {
+      return;
+    }
+    (async () => {
+      console.log(list);
+      const updated = await updateListMeta(db, id, {
+        viewed: (list.viewed ?? 0) + 1,
+      });
+      if (!updated) {
+        return;
+      }
+      setList((list) => ({ ...list!, viewed: updated.viewed }));
+    })();
+  }, [list?.id]);
 
   useEffect(() => {
     (async () => {
