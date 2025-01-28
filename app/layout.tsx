@@ -1,10 +1,11 @@
+import { StyledEngineProvider } from "@mui/material/styles";
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.scss";
-import { Providers } from "./lib/context/providers";
-import { Nav } from "./ui/components/nav";
+import { Providers } from "./ui/context/providers";
 import { Footer } from "./ui/components/footer";
-import { StyledEngineProvider } from "@mui/material/styles";
+import { Nav } from "./ui/components/nav";
+import { authWithGoogle } from "./ui/context/auth";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
   applicationName: "memuseum",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -43,7 +44,7 @@ export default function RootLayout({
           <Providers>
             <div className="flex flex-col min-h-screen container mx-auto p-2 md:p-0">
               <div className="py-2">
-                <Nav />
+                <Nav handleSignIn={authWithGoogle} />
               </div>
 
               {children}

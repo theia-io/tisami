@@ -1,6 +1,6 @@
 "use client";
 import { addVideo } from "@/app/lib/api";
-import { DBContext } from "@/app/lib/context";
+import { DBContext } from "@/app/ui/context";
 import { IVideo } from "@/app/lib/models/video";
 import { Button, Chip, ListItem, TextField } from "@mui/material";
 import { useContext, useState } from "react";

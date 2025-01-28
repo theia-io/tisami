@@ -1,6 +1,6 @@
 "use client";
 import { fetchListById, fetchListVideo } from "@/app/lib/api";
-import { DBContext } from "@/app/lib/context";
+import { DBContext } from "@/app/ui/context";
 import { IList, IVideo } from "@/app/lib/models/video";
 import { useContext, useEffect, useState } from "react";
 import { ListPreviewComponent } from "../components/list/list-preview";

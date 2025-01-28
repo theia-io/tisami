@@ -1,6 +1,6 @@
 import { IList, IVideo } from "@/app/lib/models/video";
-import { Fab } from "@mui/material";
-import Link from "next/link";
+import { Fab, Link } from "@mui/material";
+
 import { FaAngleDoubleRight, FaLink } from "react-icons/fa";
 import { getRandomCallsign } from "../../models/callsigns";
 import { Tag, Tags } from "../tag/tag";
@@ -9,9 +9,11 @@ import { useRef } from "react";
 import { useWindowDimensions } from "../../shared/viewport";
 
 type Props = {
+  /** determines if preview component is clickable */
   withLink?: boolean;
+  /** determines if there is link to open this list */
+  withButtonLink?: boolean;
   hiddenPinnedVideo?: boolean;
-
   list: IList;
   videos?: Array<IVideo>;
   children?: React.ReactNode;
@@ -22,21 +24,24 @@ export function ListPreviewComponent({
   list: { id, pinnedVideoUrl, tags, name, description, timestamp },
   children,
   withLink = false,
+  withButtonLink = false,
   hiddenPinnedVideo = true,
 }: Props) {
-    const { width } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const scrollableRef = useRef(null);
 
   const pinnedVideoBody = pinnedVideoUrl ? (
     hiddenPinnedVideo ? (
-      <a
-        className="text-xl md:text-2xl underline"
+      <Link
+        underline="hover"
+        className="text-xl md:text-2xl"
         target="_blank"
+        rel="noreferrer"
         href={`https://www.youtube.com/watch?v=${pinnedVideoUrl}`}
       >
         {" "}
         <FaLink className="inline" /> Випуск на YouTube
-      </a>
+      </Link>
     ) : (
       <Youtube videoId={pinnedVideoUrl} />
     )
@@ -49,15 +54,19 @@ export function ListPreviewComponent({
 
         <div>|</div>
 
-            <h2 className="text-xl md:text-2xl inline-block">
-              {name ?? getRandomCallsign()}
-            </h2>
+        <h2 className="text-xl md:text-2xl inline-block">
+          {name ?? getRandomCallsign()}
+        </h2>
 
-            <div>|</div>
+        <div>|</div>
 
-            <h2 className="text-xl md:text-2xl inline-block">
-              {description}
-            </h2>
+        <h2 className="text-xl md:text-2xl inline-block">{description}</h2>
+
+        {withButtonLink && (
+          <div className="ml-auto">
+            <Link href={`/list/${id}`}>Відкрити...</Link>
+          </div>
+        )}
       </div>
 
       <Tags tags={tags} />
@@ -76,7 +85,7 @@ export function ListPreviewComponent({
           <div
             onClick={() => {
               console.log("scrollableRef", scrollableRef, width);
-              (scrollableRef?.current as any).scrollLeft += (width / 2);
+              (scrollableRef?.current as any).scrollLeft += width / 2;
             }}
             className="sticky right-2 top-1/2 translate-y-[-50%]"
           >
@@ -92,7 +101,9 @@ export function ListPreviewComponent({
   return (
     <>
       {withLink ? (
-        <Link href={`/list/${id}`}>{listPreviewBody}</Link>
+        <Link className="text-stone-900 hover:cursor-pointer" href={`/list/${id}`}>
+          {listPreviewBody}
+        </Link>
       ) : (
         listPreviewBody
       )}

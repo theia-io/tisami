@@ -5,7 +5,7 @@ import {
   fetchListById,
   updateListMeta,
 } from "@/app/lib/api";
-import { DBContext } from "@/app/lib/context";
+import { DBContext } from "@/app/ui/context";
 import { IList, IVideo } from "@/app/lib/models/video";
 import { Card } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
@@ -33,6 +33,7 @@ export function List({ id }: Props) {
     if (!list) {
       return;
     }
+
     (async () => {
       console.log(list);
       const updated = await updateListMeta(db, id, {
@@ -121,12 +122,6 @@ export function List({ id }: Props) {
         )}
       </ListComponent>
 
-      <div className="flex flex-wrap justify-center gap-2">
-        {videos?.[list.id]?.map((video) => (
-          <Youtube key={video.id} videoId={video.url} />
-        ))}
-      </div>
-
       {listChildren && listChildren.length > 0 && (
         <>
           <hr className="my-2" />
@@ -136,6 +131,7 @@ export function List({ id }: Props) {
               <ListPreviewComponent
                 list={subList}
                 videos={videos?.[subList.id]}
+                withButtonLink={true}
               >
                 {editList && (
                   <Card variant="outlined" className="p-4 min-w-[215px]">

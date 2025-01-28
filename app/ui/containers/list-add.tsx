@@ -1,6 +1,6 @@
 "use client";
 import { addList } from "@/app/lib/api";
-import { DBContext } from "@/app/lib/context";
+import { DBContext } from "@/app/ui/context";
 import { Button, TextField } from "@mui/material";
 import { useContext, useState } from "react";
 import { FaPlusSquare } from "react-icons/fa";

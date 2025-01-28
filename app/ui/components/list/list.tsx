@@ -1,6 +1,6 @@
 import { IList, IVideo } from "@/app/lib/models/video";
-import { Fab } from "@mui/material";
-import { FaEdit } from "react-icons/fa";
+import { Button, Fab } from "@mui/material";
+import { FaBookmark, FaEdit, FaRegHeart, FaShareAlt } from "react-icons/fa";
 import { Tags } from "../tag/tag";
 import { TimestampComponent } from "../timestamp/timestamp";
 import { Youtube } from "../youtube/youtube";
@@ -11,6 +11,8 @@ type Props = {
   videos?: Array<IVideo>;
   children?: React.ReactNode;
   editHandler: () => void;
+  likeHandler?: () => void;
+  saveHandler?: () => void;
 };
 
 export function ListComponent({
@@ -46,7 +48,23 @@ export function ListComponent({
         {viewed && <ViewedComponent viewed={viewed} />}
       </div>
 
-      <Tags tags={tags} />
+      <div className="flex items-center">
+        <Tags tags={tags} />
+        <div className="ml-auto flex items-center">
+          <Button>
+            {" "}
+            <FaRegHeart />{" "}
+          </Button>
+          <Button>
+            {" "}
+            <FaShareAlt />{" "}
+          </Button>
+          <Button>
+            {" "}
+            <FaBookmark />{" "}
+          </Button>
+        </div>
+      </div>
 
       <div className="flex flex-wrap gap-2">
         {children}
